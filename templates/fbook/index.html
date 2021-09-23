@@ -1,0 +1,14 @@
+{% extends "layout/basic.html" %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-muted text-center index-h2 py-5">Спасибо за пользование FBook !</h2>
+<h3 class="text-center pb-4 text-info">Пожалйста выберите:</h3>
+<div class="d-flex flex-column">
+    <a class="btn btn-info mb-2" href="{% url 'fbook:login' %}">Войти</a>
+    <a class="btn btn-info" href="{% url 'fbook:register' %}">Регистрация</a>
+</div>
+
+
+{% endblock content %}
