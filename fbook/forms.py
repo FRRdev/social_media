@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
 from django.core.exceptions import ValidationError
 
-from .models import BookUser
+from .models import BookUser, Post
 from django.contrib.auth import password_validation
 
 
@@ -51,3 +51,11 @@ class RegisterUserForm(forms.ModelForm):
         fields = (
             'first_name', 'last_name', 'email', 'password1', 'password2', 'image', 'phone', 'date_of_birth', 'city',
             'about_me')
+
+
+class PostForm(forms.ModelForm):
+    title = forms.CharField(label='Заголовок')
+    class Meta:
+        model = Post
+        fields = '__all__'
+        widgets = {'user': forms.HiddenInput, 'create_at': forms.HiddenInput}

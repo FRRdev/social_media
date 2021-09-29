@@ -3,6 +3,7 @@ from django.contrib.auth.models import BaseUserManager
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
 
@@ -57,11 +58,14 @@ class BookUser(AbstractUser):
     def __str__(self):
         return self.email
 
+    class Meta:
+        ordering = ['first_name']
+
 
 class Post(models.Model):
     title = models.TextField(max_length=150)
-    text = models.TextField()
-    user = models.ForeignKey(BookUser, on_delete=models.CASCADE, verbose_name='пользователь')
+    text = models.TextField(verbose_name='текст')
+    user = models.ForeignKey(BookUser, on_delete=models.CASCADE, verbose_name='пользователь', related_name='posts')
     create_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата добавления')
 
     class Meta:
@@ -113,8 +117,8 @@ class Message(models.Model):
 
 
 class Invite(models.Model):
-    from_user = models.OneToOneField(BookUser, on_delete=models.PROTECT, related_name='from_user')
-    to_user = models.OneToOneField(BookUser, on_delete=models.PROTECT, related_name='to_user')
+    from_user = models.ForeignKey(BookUser, on_delete=models.PROTECT, related_name='from_user', unique=False)
+    to_user = models.ForeignKey(BookUser, on_delete=models.PROTECT, related_name='to_user', unique=False)
 
     class Meta:
         verbose_name_plural = 'Приглашения'
@@ -134,3 +138,4 @@ class Like(models.Model):
 
     def __str__(self):
         return f'Лайк от {self.from_user} к {self.post}'
+

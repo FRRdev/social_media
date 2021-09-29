@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'fbook.apps.FbookConfig',
     'bootstrap4',
     'django_cleanup',
+    'easy_thumbnails'
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,7 @@ TEMPLATES = [
 ]
 
 LOGIN_REDIRECT_URL = '/profile/'
+LOGOUT_REDIRECT_URL = '/'
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
@@ -125,3 +127,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'default': {
+            'size': (300, 300),
+            'crop': 'smart',
+        },
+        'list': {
+            'size': (200, 200),
+            'crop': 'smart',
+        },
+    },
+}
+THUMBNAIL_BASEDIR = 'thumbnails' #имя влож папки где хранятся мениатюры

@@ -1,0 +1,40 @@
+{% extends "layout/basic.html" %}
+{% load bootstrap4 %}
+{% load static %}
+{% load thumbnail %}
+
+
+{% block content %}
+
+
+<div class="row pt-2">
+    <div class="col-2">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:profile' %}">Моя страница</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:profile' %}">Сообщения</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:users_list' %}">Друзья</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fs-5 disabled border-bottom border-dark" href="{% url 'fbook:post' %}">Добавить
+                    пост</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fs-5 border-bottom border-dark" href="#">Disabled</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-8">
+        <h2 class="text-center py-2">Добавление нового поста</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Добавить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

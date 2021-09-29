@@ -9,13 +9,13 @@
     <div class="col-2">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link disabled fs-5 border-bottom border-dark" href="#">Моя страница</a>
+                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:profile' %}">Моя страница</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:profile' %}">Сообщения</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:users_list' %}">Друзья</a>
+                <a class="nav-link fs-5 disabled border-bottom border-dark" href="{% url 'fbook:users_list' %}">Друзья</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:post' %}">Добавить пост</a>
@@ -26,7 +26,6 @@
         </ul>
     </div>
     <div class="col-8">
-        <h3>Ваш профиль</h3>
         <div class="d-flex">
             <img class="mr-3" src="{% thumbnail user.image 'default' %}">
             <div class="d-flex flex-column">
@@ -40,35 +39,23 @@
             </div>
         </div>
         {% if user.posts.count >= 1 %}
-        <div class="text-center py-4 fs-3">Ваши посты</div>
-        {% for post in posts %}
+        <div class="text-center py-4 fs-3">Посты пользователя {{ user.first_name }}</div>
+        {% for post in user.posts.all %}
         <div class="border border-primary p-3 bg-light rounded mb-2">
             <h4>Тема: {{ post.title }}</h4>
             <div class="fs-5">{{ post.text }}</div>
-            <a href="{% url 'fbook:delete_post' pk=post.pk %}" class="btn btn-danger my-2">Удалить</a>
         </div>
         {% endfor %}
         {% else %}
-        <a href="{% url 'fbook:post' %}" class="btn btn-info py-2 my-3">Добавить пост</a>
+        <div class="text-center py-4 fs-3">У {{ user.first_name }} нет постов!</div>
         {% endif %}
     </div>
-    <div class="col-2 text-right">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
-                    data-toggle="dropdown"
-                    aria-expanded="false">
-                Настройки
-            </button>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                <li><a class="dropdown-item active" href="#">Мой профиль</a></li>
-                <li><a class="dropdown-item" href="#">Изменить пароль</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="{% url 'fbook:logout' %}">Выйти</a></li>
-            </ul>
-        </div>
+    <div class="col-2">
+        {% if add_class %}
+        <a href="{% url 'fbook:invite' pk=user.pk %}" class="btn btn-warning {{ add_class }}">&#10003 отправлено </a>
+        {% else %}
+        <a href="{% url 'fbook:invite' pk=user.pk %}" class="btn btn-warning">Добавить в друзья</a>
+        {% endif %}
     </div>
 </div>
 
