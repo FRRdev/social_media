@@ -4,11 +4,13 @@ from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
-from django.http import HttpResponseNotFound, JsonResponse
+from django.http import HttpResponseNotFound, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, DeleteView, ListView, DetailView
 from django.contrib import messages
+import json
 
 from .models import BookUser, Post, Invite
 from .forms import RegisterUserForm, PostForm
@@ -75,9 +77,6 @@ class UsersList(PageMixin, ListView):
         return objects
 
 
-
-
-
 class UserDetail(SuccessMessageMixin, LoginRequiredMixin, DetailView):
     model = BookUser
     context_object_name = 'user'
@@ -111,7 +110,7 @@ def make_invite(request, pk):
     return redirect('fbook:user_detail', pk=pk)
 
 
-class OfferFriend(PageMixin,ListView):
+class OfferFriend(PageMixin, ListView):
     template_name = 'fbook/offer_friend.html'
     model = BookUser
     context_object_name = 'users'
@@ -122,4 +121,28 @@ class OfferFriend(PageMixin,ListView):
         return [user.from_user for user in current_user.to_user.all()]
 
 
+@csrf_exempt
+def accept_offer(request):
+    if request.method == "POST" and request.is_ajax():
+        print('АЯКс работает!!!АААААААААААААА')
+        current_user = BookUser.objects.get(pk=request.user.pk)
+        pk_data = request.POST.get("pk")
+        from_user = BookUser.objects.get(pk=pk_data)
+        current_user.friend.add(from_user)
+        from_user.friend.add(current_user)
+        from_user.save()
+        current_user.save()
+        Invite.objects.filter(from_user=from_user, to_user=current_user).delete()
+        return JsonResponse({'name': 'Михаил'}, status=200)
+    else:
+        return HttpResponse('Не AJAX!')
 
+
+class MyFriendList(PageMixin, ListView):
+    template_name = 'fbook/my_friends.html'
+    model = BookUser
+    context_object_name = 'users'
+
+    def get_queryset(self):
+        current_user = BookUser.objects.get(pk=self.request.user.pk)
+        return current_user.friend.all()

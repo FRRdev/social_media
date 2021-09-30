@@ -1,10 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout/basic.html" %}
+{% load bootstrap4 %}
+{% load static %}
+{% load thumbnail %}
 
-</body>
-</html>
+
+{% block content %}
+<div class="row pt-2">
+    <div class="col-2">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:profile' %}">Моя страница</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fs-5 border-bottom border-dark" href="#">Сообщения</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fs-5 border-bottom border-dark disabled" href="#">Друзья</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:post' %}">Добавить
+                    пост</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fs-5 border-bottom border-dark" href="#">Disabled</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active fs-5"><a href="#">Мои друзья</a></li>
+                <li class="breadcrumb-item fs-5"><a href="{% url 'fbook:offers_friend' %}">Предложение дружить <span class="badge badge-pill badge-danger">{{ count.count }}</span></a></li>
+                <li class="breadcrumb-item fs-5" aria-current="page"><a href="{% url 'fbook:users_list' %}">Список людей</a></li>
+            </ol>
+        </nav>
+        {% for user in users %}
+        <a href="{% url 'fbook:user_detail' pk=user.pk %}" class="d-flex border border-dark rounded my-3 my-in">
+            {% if user.image %}
+            <img class="mr-3" src="{% thumbnail user.image 'list' %}">
+            {% else %}
+            <img class="mr-3" src="{% static 'main/empty.jpg' %}">
+            {% endif %}
+            <div>
+                <h5 class="mt-3">Имя: {{ user.first_name }}</h5>
+                <h5 class="test">Фамилия : {{ user.last_name }}</h5>
+                <h5>Телефон: {{ user.phone }}</h5>
+                <h5>Дата рождения: {{ user.date_of_birth }}</h5>
+                <h5>Город: {{ user.city }}</h5>
+            </div>
+        </a>
+        {% endfor %}
+        {% if count.count >= 1 %}
+        <div class="offset-md-4">{% bootstrap_pagination users_list %}</div>
+        {% else %}
+        <div class="text-center fs-5 mt-5">Список пуст!</div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

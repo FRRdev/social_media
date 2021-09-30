@@ -15,4 +15,6 @@ urlpatterns = [
     path('users/<int:pk>/', views.UserDetail.as_view(), name='user_detail'),
     path('users/offers/', views.OfferFriend.as_view(), name='offers_friend'),
     path('users/invite/<int:pk>', views.make_invite, name='invite'),
+    path('users/accept/', views.accept_offer, name='accept_offer'),
+    path('users/friends/', views.MyFriendList.as_view(), name='friends'),
 ]

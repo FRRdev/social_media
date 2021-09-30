@@ -5,6 +5,36 @@
 
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+      integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script>
+   $(document).ready(function() {
+  $('button').click(function(e) {
+    // Stop form from sending request to server
+    e.preventDefault();
+
+    var btn = $(this);
+
+    $.ajax({
+      method: "POST",
+      url: "{% url 'fbook:accept_offer' %}",
+      dataType: "json",
+      data: {
+            "pk":{{ user.pk }}
+      },
+      success: function(data) {
+        btn.addClass('disabled');
+        btn.text("Добавлен!");
+      },
+      error: function(er) {
+        console.log(er);
+      }
+    });
+  })
+});
+
+</script>
 <div class="row pt-2">
     <div class="col-2">
         <ul class="nav flex-column">
@@ -15,7 +45,8 @@
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:profile' %}">Сообщения</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link fs-5 disabled border-bottom border-dark" href="{% url 'fbook:users_list' %}">Друзья</a>
+                <a class="nav-link fs-5 disabled border-bottom border-dark"
+                   href="{% url 'fbook:users_list' %}">Друзья</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:post' %}">Добавить пост</a>
@@ -52,9 +83,9 @@
     </div>
     <div class="col-2">
         {% if already_friend %}
-        <a href="{% url 'fbook:invite' pk=user.pk %}" class="btn btn-info disabled">уже в друзьях</a>
+        <a href="{% url 'fbook:invite' pk=user.pk %}" class="btn btn-info disabled">Уже в друзьях</a>
         {% elif exist_in_offer %}
-        <a href="#" class="btn btn-info">Принять приглашение</a>
+        <button class="btn btn-info" type="button">Принять приглашение</button>
         {% elif add_class %}
         <a href="{% url 'fbook:invite' pk=user.pk %}" class="btn btn-warning {{ add_class }}">&#10003 отправлено </a>
         {% else %}
