@@ -6,7 +6,8 @@ class PageMixin:
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        list_users = super().get_queryset()
+        list_users = self.get_queryset()
+        print(list_users)
         paginator = Paginator(list_users, PageMixin.paginate_by)
 
         page = self.request.GET.get('page')

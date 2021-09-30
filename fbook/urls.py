@@ -13,5 +13,6 @@ urlpatterns = [
     path('post/delete/<int:pk>/', views.delete_post, name='delete_post'),
     path('users/', views.UsersList.as_view(), name='users_list'),
     path('users/<int:pk>/', views.UserDetail.as_view(), name='user_detail'),
+    path('users/offers/', views.OfferFriend.as_view(), name='offers_friend'),
     path('users/invite/<int:pk>', views.make_invite, name='invite'),
 ]

@@ -76,6 +76,8 @@ class UsersList(PageMixin, ListView):
 
 
 
+
+
 class UserDetail(SuccessMessageMixin, LoginRequiredMixin, DetailView):
     model = BookUser
     context_object_name = 'user'
@@ -84,11 +86,19 @@ class UserDetail(SuccessMessageMixin, LoginRequiredMixin, DetailView):
         context = super(UserDetail, self).get_context_data(**kwargs)
         from_user = BookUser.objects.get(pk=self.request.user.pk)
         to_user = BookUser.objects.get(pk=context['user'].pk)
-        exist = Invite.objects.filter(from_user=from_user, to_user=to_user).exists()
-        if exist:
-            context['add_class'] = 'disabled'
+        exist_in_friends = from_user.friend.filter(email=to_user.email).exists()
+        if exist_in_friends:
+            context['already_friend'] = 'true'
         else:
-            context['add_class'] = ''
+            exist_in_offer = to_user.from_user.filter(to_user=from_user).exists()
+            if exist_in_offer:
+                context['exist_in_offer'] = 'true'
+            else:
+                exist = Invite.objects.filter(from_user=from_user, to_user=to_user).exists()
+                if exist:
+                    context['add_class'] = 'disabled'
+                else:
+                    context['add_class'] = ''
         return context
 
 
@@ -101,7 +111,7 @@ def make_invite(request, pk):
     return redirect('fbook:user_detail', pk=pk)
 
 
-class OfferFriend(ListView):
+class OfferFriend(PageMixin,ListView):
     template_name = 'fbook/offer_friend.html'
     model = BookUser
     context_object_name = 'users'
@@ -109,5 +119,7 @@ class OfferFriend(ListView):
 
     def get_queryset(self):
         current_user = BookUser.objects.get(pk=self.request.user.pk)
-        objects = current_user.to_user.all()
-        return objects
+        return [user.from_user for user in current_user.to_user.all()]
+
+
+

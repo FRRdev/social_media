@@ -30,8 +30,8 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item fs-5"><a href="#">Мои друзья</a></li>
-                <li class="breadcrumb-item fs-5"><a href="{% url 'fbook:offers_friend' %}">Предложение дружить <span class="badge badge-pill badge-danger">{{ count.count }}</span></a></li>
-                <li class="breadcrumb-item active fs-5" aria-current="page">Список людей</li>
+                <li class="breadcrumb-item active fs-5">Предложение дружить <span class="badge badge-pill badge-danger">{{ count.count }}</span></li>
+                <li class="breadcrumb-item fs-5" aria-current="page"><a href="{% url 'fbook:users_list' %}">Список людей</a></li>
             </ol>
         </nav>
         {% for user in users %}
@@ -50,7 +50,11 @@
             </div>
         </a>
         {% endfor %}
+        {% if count.count >= 1 %}
         <div class="offset-md-4">{% bootstrap_pagination users_list %}</div>
+        {% else %}
+        <div class="text-center fs-5 mt-5">Список пуст!</div>
+        {% endif %}
     </div>
 </div>
 

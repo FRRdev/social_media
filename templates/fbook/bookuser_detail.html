@@ -51,7 +51,11 @@
         {% endif %}
     </div>
     <div class="col-2">
-        {% if add_class %}
+        {% if already_friend %}
+        <a href="{% url 'fbook:invite' pk=user.pk %}" class="btn btn-info disabled">уже в друзьях</a>
+        {% elif exist_in_offer %}
+        <a href="#" class="btn btn-info">Принять приглашение</a>
+        {% elif add_class %}
         <a href="{% url 'fbook:invite' pk=user.pk %}" class="btn btn-warning {{ add_class }}">&#10003 отправлено </a>
         {% else %}
         <a href="{% url 'fbook:invite' pk=user.pk %}" class="btn btn-warning">Добавить в друзья</a>
