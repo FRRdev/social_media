@@ -90,8 +90,8 @@ class Comment(models.Model):
 
 
 class Chat(models.Model):
-    first_user = models.OneToOneField(BookUser, on_delete=models.CASCADE, related_name='first_user')
-    second_user = models.OneToOneField(BookUser, on_delete=models.CASCADE, related_name='second_user')
+    first_user = models.ForeignKey(BookUser, on_delete=models.CASCADE, related_name='first_user')
+    second_user = models.ForeignKey(BookUser, on_delete=models.CASCADE, related_name='second_user')
 
     class Meta:
         verbose_name_plural = 'Чаты'
@@ -129,8 +129,8 @@ class Invite(models.Model):
 
 
 class Like(models.Model):
-    from_user = models.OneToOneField(BookUser, on_delete=models.PROTECT)
-    post = models.OneToOneField(Post, on_delete=models.PROTECT)
+    from_user = models.ForeignKey(BookUser, on_delete=models.PROTECT, related_name='like_from', unique=False)
+    post = models.ForeignKey(Post, on_delete=models.PROTECT, related_name='like_post', unique=False)
 
     class Meta:
         verbose_name_plural = 'Лайки'
@@ -138,4 +138,3 @@ class Like(models.Model):
 
     def __str__(self):
         return f'Лайк от {self.from_user} к {self.post}'
-

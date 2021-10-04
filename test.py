@@ -29,25 +29,28 @@ def singleton(aClass):
 
 @singleton
 class Spam:
-    def __init__(self,val):
+    def __init__(self, val):
         self.val = val
-
 
 
 class Parent(object):
     x = None  # default value
+
     def __init__(self):
         method = self.run
         print(self.x)
         method()
 
+
 class someChild(Parent):
     x = 10
+
     def __init__(self):
         super().__init__()
 
     def run(self):
         print('едет')
+
 
 ########################
 
@@ -55,14 +58,15 @@ class ParentTest(object):
     def do(self):
         print(self.run())
 
+
 class otherChild(ParentTest):
     def run(self):
         print('едет')
 
-b = otherChild()
-b.do()
 
+import re
 
-#a = someChild()
-# output: 10
-
+test = '89507783302'
+pattern = re.compile('[^8+](\d*)')
+ob = re.search(pattern, test).group(0)
+print(ob)

@@ -84,6 +84,7 @@
     <div class="col-2">
         {% if already_friend %}
         <a href="{% url 'fbook:invite' pk=user.pk %}" class="btn btn-info disabled">Уже в друзьях</a>
+        <a href="{% url 'fbook:delete_friend' pk=user.pk %}" class="btn btn-danger mt-2">Удалить из друзей</a>
         {% elif exist_in_offer %}
         <button class="btn btn-info" type="button">Принять приглашение</button>
         {% elif add_class %}

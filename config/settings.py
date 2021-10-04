@@ -99,7 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 AUTH_USER_MODEL = 'fbook.BookUser'
@@ -139,6 +138,10 @@ THUMBNAIL_ALIASES = {
             'size': (200, 200),
             'crop': 'smart',
         },
+        'chat': {
+            'size': (100, 100),
+            'crop': 'smart',
+        }
     },
 }
-THUMBNAIL_BASEDIR = 'thumbnails' #имя влож папки где хранятся мениатюры
+THUMBNAIL_BASEDIR = 'thumbnails'  # имя влож папки где хранятся мениатюры

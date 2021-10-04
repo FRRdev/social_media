@@ -17,4 +17,6 @@ urlpatterns = [
     path('users/invite/<int:pk>', views.make_invite, name='invite'),
     path('users/accept/', views.accept_offer, name='accept_offer'),
     path('users/friends/', views.MyFriendList.as_view(), name='friends'),
+    path('users/delete/<int:pk>', views.delete_friend, name='delete_friend'),
+    path('chats/', views.ChatList.as_view(), name='chats'),
 ]
