@@ -37,5 +37,17 @@
     cursor:pointer;
     transition:.4s;
 }
+.prokrutka {
+    height: 800px; /* высота нашего блока *//* ширина нашего блока */
+    background: #CFC9C9; /* цвет фона, белый */
+    border: 1px solid #CFC9C9; /* размер и цвет границы блока */
+    overflow-y: scroll;
+}
 
+.mes1 {
+   background-color:#A9A9A9;
+}
 
+.mes2 {
+    background-color:#DCDCDC;
+}

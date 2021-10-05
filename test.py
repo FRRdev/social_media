@@ -66,7 +66,7 @@ class otherChild(ParentTest):
 
 import re
 
-test = '89507783302'
-pattern = re.compile('[^8+](\d*)')
+test = '79507783302'
+pattern = re.compile('[^87+](\d*)')
 ob = re.search(pattern, test).group(0)
 print(ob)

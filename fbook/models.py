@@ -102,7 +102,9 @@ class Chat(models.Model):
 
 
 class Message(models.Model):
-    author = models.ForeignKey(BookUser, on_delete=models.CASCADE, verbose_name='автор')
+    author = models.ForeignKey(BookUser, on_delete=models.CASCADE, verbose_name='автор',
+                               related_name='messages_by_user')
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages_by_chat',default=None)
     create_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата добавления')
     content = models.TextField()
     is_active = models.BooleanField(default=False)
@@ -110,7 +112,7 @@ class Message(models.Model):
     class Meta:
         verbose_name_plural = 'Сообщения'
         verbose_name = 'Сообщение'
-        ordering = ['author']
+        ordering = ['create_at']
 
     def __str__(self):
         return f'сообщение - {self.id}'

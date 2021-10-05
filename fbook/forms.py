@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
 from django.core.exceptions import ValidationError
 
-from .models import BookUser, Post
+from .models import BookUser, Post, Message
 from django.contrib.auth import password_validation
 
 
@@ -59,3 +59,9 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = '__all__'
         widgets = {'user': forms.HiddenInput, 'create_at': forms.HiddenInput}
+
+class SendMessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ('content',)
+

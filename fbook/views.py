@@ -5,7 +5,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.http import HttpResponseNotFound, JsonResponse, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, DeleteView, ListView, DetailView
@@ -13,7 +13,7 @@ from django.contrib import messages
 import json
 
 from .models import BookUser, Post, Invite, Chat
-from .forms import RegisterUserForm, PostForm
+from .forms import RegisterUserForm, PostForm, SendMessageForm
 from .mixins import PageMixin
 
 
@@ -158,7 +158,7 @@ def delete_friend(request, pk):
         current_user.friend.remove(user_to_delete)
         user_to_delete.friend.remove(current_user)
         q = (Q(first_user=current_user) & Q(second_user=user_to_delete)) | (
-                    Q(first_user=user_to_delete) & Q(second_user=current_user))
+                Q(first_user=user_to_delete) & Q(second_user=current_user))
         Chat.objects.filter(q).delete()
         current_user.save()
         user_to_delete.save()
@@ -168,6 +168,7 @@ def delete_friend(request, pk):
         return HttpResponseNotFound()
     return redirect('fbook:friends')
 
+
 class ChatList(PageMixin, ListView):
     template_name = 'fbook/chats.html'
     model = BookUser
@@ -176,3 +177,11 @@ class ChatList(PageMixin, ListView):
     def get_queryset(self):
         current_user = BookUser.objects.get(pk=self.request.user.pk)
         return current_user.friend.all()
+
+
+def test_chat(request, pk):
+    user = get_object_or_404(BookUser, pk=pk)
+    initial = {
+
+    }
+    return render(request, 'fbook/chat_with_user.html')
