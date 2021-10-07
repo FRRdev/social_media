@@ -51,3 +51,8 @@
 .mes2 {
     background-color:#DCDCDC;
 }
+.new-mes {
+    background-color:red;
+    color:white;
+    font-weight:bold;
+}

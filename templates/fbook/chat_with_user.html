@@ -5,6 +5,7 @@
 
 
 {% block content %}
+
 <div class="row pt-2">
     <div class="col-2">
         <ul class="nav flex-column">
@@ -12,7 +13,7 @@
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:profile' %}">Моя страница</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link fs-5 border-bottom border-dark disabled" href="#">Сообщения</a>
+                <a class="nav-link fs-5 border-bottom border-dark disabled" href="#">Сообщения <span class="badge badge-pill badge-primary">{{ count_of_messages }}</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:users_list' %}">Друзья</a>
@@ -28,15 +29,38 @@
     </div>
     <div class="col-8">
         <div class="prokrutka">
-            <div class="d-flex flex-row my-2 ml-2">
-                <div class="p-2 bd-highlight border border-dark rounded mes1">Flex item 1</div>
-                <div class="my-auto ml-2"><em>12.01.2000</em></div>
-            </div>
+            {% for message in all_messages %}
+            {% if message.author.pk == user.pk %}
             <div class="d-flex flex-row-reverse my-2 mr-2">
-                <div class="p-2 bd-highlight border border-dark rounded mes2">Flex item 1</div>
-                <div class="my-auto mr-2"><em>12.01.2000</em></div>
+                <div class="p-2 bd-highlight border border-dark rounded mes2">{{ message.content }}</div>
+                <div class="my-auto mr-2"><em>{{ message.create_at|date:"d.m H:i" }}</em></div>
             </div>
+            {% else %}
+            <div class="d-flex flex-row my-2 ml-2">
+                <div class="p-2 bd-highlight border border-dark rounded mes1">{{ message.content }}</div>
+                <div class="my-auto ml-2"><em>{{ message.create_at|date:"d.m H:i" }}</em></div>
+            </div>
+            {% endif %}
+            {% endfor %}
         </div>
+        <form id="sform" method="post" class="my-2">
+            {% csrf_token %}
+            {% for field in form %}
+            {% if field.errors %}
+            <div class="alert alert-danger">
+                {{ field.errors }}
+            </div>
+            {% endif %}
+            <div class="row">
+                {{ field }}
+            </div>
+            {% endfor %}
+            <div class="row">
+                {% csrf_token %}
+                <button type="submit" class="col-md-4 btn btn-info mx-auto my-2">Отправить</button>
+            </div>
+
+        </form>
     </div>
 </div>
 

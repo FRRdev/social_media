@@ -19,5 +19,5 @@ urlpatterns = [
     path('users/friends/', views.MyFriendList.as_view(), name='friends'),
     path('users/delete/<int:pk>', views.delete_friend, name='delete_friend'),
     path('chats/', views.ChatList.as_view(), name='chats'),
-    path('chats/<int:pk>/', views.test_chat, name='chat_test'),
+    path('chats/<int:pk>/', views.chat_with_user, name='chat_with_user'),
 ]

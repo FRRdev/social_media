@@ -12,7 +12,7 @@
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:profile' %}">Моя страница</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link fs-5 border-bottom border-dark disabled" href="#">Сообщения</a>
+                <a class="nav-link fs-5 border-bottom border-dark disabled" href="#">Сообщения <span class="badge badge-pill badge-primary">{{ count_of_messages }}</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:users_list' %}">Друзья</a>
@@ -29,13 +29,16 @@
     <div class="col-8">
         {% if users %}
         {% for user in users %}
-        <a href="{% url 'fbook:chat_test' pk=user.pk %}" class="d-flex border border-dark rounded my-3 my-in">
+        <a href="{% url 'fbook:chat_with_user' pk=user.pk %}" class="d-flex border border-dark rounded my-3 my-in">
             {% if user.image %}
             <img class="mr-3 m-2 rounded-circle" src="{% thumbnail user.image 'chat' %}">
             {% else %}
             <img class="mr-3" src="{% static 'main/empty.jpg' %}">
             {% endif %}
             <h5 class="col my-auto fs-4">Чат с {{ user.first_name }} {{ user.last_name }}</h5>
+            {% if user.pk in flag_mes %}
+            <div class="my-auto fs-5 border border-dark rounded mr-4 px-2 new-mes">Новое сообщение !</div>
+            {% endif %}
         </a>
 
         {% endfor %}

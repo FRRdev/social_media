@@ -12,7 +12,7 @@
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:profile' %}">Моя страница</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:chats' %}">Сообщения</a>
+                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:chats' %}">Сообщения <span class="badge badge-pill badge-primary">{{ count_of_messages }}</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link fs-5 border-bottom border-dark disabled" href="#">Друзья</a>

@@ -55,13 +55,18 @@ class RegisterUserForm(forms.ModelForm):
 
 class PostForm(forms.ModelForm):
     title = forms.CharField(label='Заголовок')
+
     class Meta:
         model = Post
         fields = '__all__'
         widgets = {'user': forms.HiddenInput, 'create_at': forms.HiddenInput}
 
+
 class SendMessageForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.widgets.Textarea(attrs={'rows': 4, 'placeholder': 'Введите сообщение'}),
+                              label='')
+
     class Meta:
         model = Message
-        fields = ('content',)
-
+        exclude = ('is_active',)
+        widgets = {'chat': forms.HiddenInput, 'author': forms.HiddenInput}

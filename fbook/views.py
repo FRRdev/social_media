@@ -12,7 +12,7 @@ from django.views.generic import CreateView, DeleteView, ListView, DetailView
 from django.contrib import messages
 import json
 
-from .models import BookUser, Post, Invite, Chat
+from .models import BookUser, Post, Invite, Chat, Message
 from .forms import RegisterUserForm, PostForm, SendMessageForm
 from .mixins import PageMixin
 
@@ -124,7 +124,6 @@ class OfferFriend(PageMixin, ListView):
 @csrf_exempt
 def accept_offer(request):
     if request.method == "POST" and request.is_ajax():
-        print('АЯКс работает!!!АААААААААААААА')
         current_user = BookUser.objects.get(pk=request.user.pk)
         pk_data = request.POST.get("pk")
         from_user = BookUser.objects.get(pk=pk_data)
@@ -178,10 +177,44 @@ class ChatList(PageMixin, ListView):
         current_user = BookUser.objects.get(pk=self.request.user.pk)
         return current_user.friend.all()
 
+    def get_context_data(self, **kwargs):
+        current_user = BookUser.objects.get(pk=self.request.user.pk)
+        data = super().get_context_data(**kwargs)
+        users = self.get_queryset()
+        data['flag_mes'] = []
+        for user in users:
+            q = (Q(first_user=current_user) & Q(second_user=user)) | (
+                    Q(first_user=user) & Q(second_user=current_user))
+            chat = Chat.objects.filter(q)[0]
+            exist_messages = Message.objects.filter(chat=chat, author=user, is_active=True).exists()
+            if exist_messages:
+                data['flag_mes'].append(user.pk)
 
-def test_chat(request, pk):
+        return data
+
+
+def chat_with_user(request, pk):
+    current_user = BookUser.objects.get(pk=request.user.pk)
     user = get_object_or_404(BookUser, pk=pk)
+    q = (Q(first_user=current_user) & Q(second_user=user)) | (
+            Q(first_user=user) & Q(second_user=current_user))
+    chat = Chat.objects.filter(q)[0]
     initial = {
-
+        "chat": chat.pk,
+        "author": current_user.pk,
     }
-    return render(request, 'fbook/chat_with_user.html')
+    form = SendMessageForm(initial=initial)
+    if request.method == 'POST':
+        c_form = SendMessageForm(request.POST)
+        if c_form.is_valid():
+            c_form.save()
+        else:
+            form = c_form
+    current_messages = Message.objects.filter(chat=chat, author=current_user)
+    user_messages = Message.objects.filter(chat=chat, author=user)
+    for message in user_messages:
+        message.is_active = False
+        message.save()
+    messages = current_messages.union(user_messages)
+    context = {'form': form, 'all_messages': messages, 'to_user': user.pk}
+    return render(request, 'fbook/chat_with_user.html', context)

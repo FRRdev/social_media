@@ -107,7 +107,7 @@ class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages_by_chat',default=None)
     create_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата добавления')
     content = models.TextField()
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = 'Сообщения'
