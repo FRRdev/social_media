@@ -13,7 +13,7 @@ from django.contrib import messages
 import json
 
 from .models import BookUser, Post, Invite, Chat, Message
-from .forms import RegisterUserForm, PostForm, SendMessageForm
+from .forms import RegisterUserForm, PostForm, SendMessageForm, SearchForm
 from .mixins import PageMixin
 
 
@@ -74,7 +74,22 @@ class UsersList(PageMixin, ListView):
     def get_queryset(self):
         q = Q(email='admin@admin.ru') | Q(pk=self.request.user.pk)
         objects = BookUser.objects.exclude(q)
+        if 'keyword' in self.request.GET:
+            keyword = self.request.GET['keyword']
+            q = Q(first_name__icontains=keyword) | Q(last_name__icontains=keyword)
+            objects = objects.filter(q)
+
         return objects
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if 'keyword' in self.request.GET:
+            keyword = self.request.GET['keyword']
+        else:
+            keyword = ''
+        form = SearchForm(initial={'keyword': keyword})
+        data['form'] = form
+        return data
 
 
 class UserDetail(SuccessMessageMixin, LoginRequiredMixin, DetailView):

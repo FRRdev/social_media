@@ -70,3 +70,7 @@ class SendMessageForm(forms.ModelForm):
         model = Message
         exclude = ('is_active',)
         widgets = {'chat': forms.HiddenInput, 'author': forms.HiddenInput}
+
+
+class SearchForm(forms.Form):
+    keyword = forms.CharField(required=False, max_length=20, label='')
