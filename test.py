@@ -66,7 +66,5 @@ class otherChild(ParentTest):
 
 import re
 
-test = '79507783302'
-pattern = re.compile('[^87+](\d*)')
-ob = re.search(pattern, test).group(0)
-print(ob)
+test = '0.1'
+print(float(test))

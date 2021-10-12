@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
 from django.core.exceptions import ValidationError
 
-from .models import BookUser, Post, Message
+from .models import BookUser, Post, Message, Comment
 from django.contrib.auth import password_validation
 
 
@@ -74,3 +74,12 @@ class SendMessageForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     keyword = forms.CharField(required=False, max_length=20, label='')
+
+
+class UserCommentForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.widgets.Textarea(attrs={'rows': 4, 'placeholder': 'Введите сообщение'}),
+                              label='Ваш комментарий')
+    class Meta:
+        model = Comment
+        exclude = ('post',)
+        widgets = {'author': forms.HiddenInput}

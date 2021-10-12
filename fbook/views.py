@@ -12,8 +12,8 @@ from django.views.generic import CreateView, DeleteView, ListView, DetailView
 from django.contrib import messages
 import json
 
-from .models import BookUser, Post, Invite, Chat, Message
-from .forms import RegisterUserForm, PostForm, SendMessageForm, SearchForm
+from .models import BookUser, Post, Invite, Chat, Message, Comment
+from .forms import RegisterUserForm, PostForm, SendMessageForm, SearchForm, UserCommentForm
 from .mixins import PageMixin
 
 
@@ -30,8 +30,7 @@ def index(request):
 @login_required
 def profile(request):
     user = BookUser.objects.get(pk=request.user.id)
-    posts = user.posts.all()
-    context = {'user': user, 'posts': posts}
+    context = {'user': user}
     return render(request, 'fbook/profile.html', context)
 
 
@@ -96,10 +95,27 @@ class UserDetail(SuccessMessageMixin, LoginRequiredMixin, DetailView):
     model = BookUser
     context_object_name = 'user'
 
+    def post(self, request, *args, **kwargs):
+        id_user = self.get_object().pk
+        if request.method == "POST":
+            form = UserCommentForm(request.POST)
+            post = Post.objects.get(pk=request.POST.get('post', None))
+            if form.is_valid():
+                content = form['content'].value()
+                author = BookUser.objects.get(pk=form['author'].value())
+                comment = Comment.objects.create(author=author, content=content, post=post)
+                comment.save()
+                return redirect('fbook:user_detail', pk=id_user)
+            return redirect('fbook:user_detail', pk=id_user)
+
     def get_context_data(self, **kwargs):
         context = super(UserDetail, self).get_context_data(**kwargs)
         from_user = BookUser.objects.get(pk=self.request.user.pk)
         to_user = BookUser.objects.get(pk=context['user'].pk)
+        initial = {
+            'author': from_user.pk,
+        }
+        form = UserCommentForm(initial=initial)
         exist_in_friends = from_user.friend.filter(email=to_user.email).exists()
         if exist_in_friends:
             context['already_friend'] = 'true'
@@ -113,6 +129,7 @@ class UserDetail(SuccessMessageMixin, LoginRequiredMixin, DetailView):
                     context['add_class'] = 'disabled'
                 else:
                     context['add_class'] = ''
+        context['form'] = form
         return context
 
 

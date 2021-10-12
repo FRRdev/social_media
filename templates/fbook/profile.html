@@ -41,10 +41,10 @@
         </div>
         {% if user.posts.count >= 1 %}
         <div class="text-center py-4 fs-3">Ваши посты</div>
-        {% for post in posts %}
-        <div class="border border-primary p-3 bg-light rounded mb-2">
-            <h4>Тема: {{ post.title }}</h4>
-            <div class="fs-5">{{ post.text }}</div>
+        {% for post in user.posts.all %}
+        <div class="border border-dark p-3 bg-light rounded mb-2">
+            <h4 class="text-center">{{ post.title }}</h4>
+            <div class="fs-5 mt-3">{{ post.text }}</div>
             <a href="{% url 'fbook:delete_post' pk=post.pk %}" class="btn btn-danger my-2">Удалить</a>
         </div>
         {% endfor %}

@@ -68,6 +68,14 @@ class Post(models.Model):
     user = models.ForeignKey(BookUser, on_delete=models.CASCADE, verbose_name='пользователь', related_name='posts')
     create_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата добавления')
 
+    def get_id_for_frontend(self):
+        id = '#' + str(self.title).replace(' ', '')
+        return id
+
+    def get_href_for_frontend(self):
+        id = str(self.title).replace(' ', '')
+        return id
+
     class Meta:
         verbose_name_plural = 'Посты'
         verbose_name = 'Пост'
@@ -104,7 +112,7 @@ class Chat(models.Model):
 class Message(models.Model):
     author = models.ForeignKey(BookUser, on_delete=models.CASCADE, verbose_name='автор',
                                related_name='messages_by_user')
-    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages_by_chat',default=None)
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages_by_chat', default=None)
     create_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата добавления')
     content = models.TextField()
     is_active = models.BooleanField(default=True)
