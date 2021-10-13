@@ -31,6 +31,11 @@ def index(request):
 def profile(request):
     user = BookUser.objects.get(pk=request.user.id)
     context = {'user': user}
+    list_of_posts_with_like = []
+    for post in user.posts.all():
+        if Like.objects.filter(from_user=user, post=post).exists():
+            list_of_posts_with_like.append(post.pk)
+    context['list_likes'] = list_of_posts_with_like
     return render(request, 'fbook/profile.html', context)
 
 
