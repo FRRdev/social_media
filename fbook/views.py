@@ -12,7 +12,7 @@ from django.views.generic import CreateView, DeleteView, ListView, DetailView
 from django.contrib import messages
 import json
 
-from .models import BookUser, Post, Invite, Chat, Message, Comment
+from .models import BookUser, Post, Invite, Chat, Message, Comment, Like
 from .forms import RegisterUserForm, PostForm, SendMessageForm, SearchForm, UserCommentForm
 from .mixins import PageMixin
 
@@ -129,6 +129,11 @@ class UserDetail(SuccessMessageMixin, LoginRequiredMixin, DetailView):
                     context['add_class'] = 'disabled'
                 else:
                     context['add_class'] = ''
+        list_of_posts_with_like = []
+        for post in to_user.posts.all():
+            if Like.objects.filter(from_user=from_user, post=post).exists():
+                list_of_posts_with_like.append(post.pk)
+        context['list_likes'] = list_of_posts_with_like
         context['form'] = form
         return context
 
@@ -250,3 +255,24 @@ def chat_with_user(request, pk):
     messages = current_messages.union(user_messages)
     context = {'form': form, 'all_messages': messages, 'to_user': user.pk}
     return render(request, 'fbook/chat_with_user.html', context)
+
+
+@csrf_exempt
+def like_handler(request):
+    if request.method == "POST" and request.is_ajax():
+        current_user = BookUser.objects.get(pk=request.user.pk)
+        pk_data = request.POST.get("pk", None)
+        try:
+            post = Post.objects.get(pk=pk_data)
+            if Like.objects.filter(from_user=current_user, post=post).exists():
+                like = Like.objects.get(from_user=current_user, post=post)
+                like.delete()
+            else:
+                like = Like.objects.create(from_user=current_user, post=post)
+                like.save()
+            count_likes = post.like_post.count()
+            return JsonResponse({'count_likes': count_likes}, status=200)
+        except Post.DoesNotExist:
+            return HttpResponseNotFound()
+    else:
+        return HttpResponse('Не AJAX!')

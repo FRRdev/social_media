@@ -20,4 +20,5 @@ urlpatterns = [
     path('users/delete/<int:pk>', views.delete_friend, name='delete_friend'),
     path('chats/', views.ChatList.as_view(), name='chats'),
     path('chats/<int:pk>/', views.chat_with_user, name='chat_with_user'),
+    path('like/', views.like_handler, name='like_handler'),
 ]

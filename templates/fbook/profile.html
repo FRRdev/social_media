@@ -12,7 +12,8 @@
                 <a class="nav-link disabled fs-5 border-bottom border-dark" href="">Моя страница</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:chats' %}">Сообщения <span class="badge badge-pill badge-primary">{{ count_of_messages }}</span></a>
+                <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:chats' %}">Сообщения <span
+                        class="badge badge-pill badge-primary">{{ count_of_messages }}</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link fs-5 border-bottom border-dark" href="{% url 'fbook:users_list' %}">Друзья</a>
@@ -44,8 +45,40 @@
         {% for post in user.posts.all %}
         <div class="border border-dark p-3 bg-light rounded mb-2">
             <h4 class="text-center">{{ post.title }}</h4>
-            <div class="fs-5 mt-3">{{ post.text }}</div>
+            <div class="fs-5 mt-2">{{ post.text }}</div>
             <a href="{% url 'fbook:delete_post' pk=post.pk %}" class="btn btn-danger my-2">Удалить</a>
+            <div type="button" class="btn btn-primary" data-bs-toggle="modal"
+                 data-bs-target="{{ post.get_id_for_frontend }}">
+                Показать комментарии
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="{{ post.get_href_for_frontend }}" data-bs-backdrop="static"
+                 data-bs-keyboard="false"
+                 tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Коментрарии</h5>
+                            <div type="button" class="btn-close" data-bs-dismiss="modal"
+                                 aria-label="Close"></div>
+                        </div>
+                        <div class="modal-body">
+                            {% for comment in post.comment_set.all %}
+                            <div class="p-2">
+                                <h4>{{ comment.author.first_name }} {{ comment.author.last_name }} <em>
+                                   {{ comment.create_at|date:"d.m H:i" }}</em></h4>
+                                <h6>{{ comment.content }}</h6>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <div type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                закрыть
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         {% endfor %}
         {% else %}
