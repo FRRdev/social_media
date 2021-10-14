@@ -7,9 +7,11 @@ from django.views.decorators.cache import never_cache
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('fbook.urls',namespace=''))
+    path('', include('fbook.urls', namespace='')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/v1/', include('api.urls')),
 ]
 
 if settings.DEBUG:
-    urlpatterns.append(path('static/<path:path>',never_cache(serve)))
-    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+    urlpatterns.append(path('static/<path:path>', never_cache(serve)))
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

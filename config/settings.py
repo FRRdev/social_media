@@ -27,7 +27,9 @@ INSTALLED_APPS = [
     'fbook.apps.FbookConfig',
     'bootstrap4',
     'django_cleanup',
-    'easy_thumbnails'
+    'easy_thumbnails',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
