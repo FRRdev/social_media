@@ -89,12 +89,12 @@ class Comment(models.Model):
     author = models.ForeignKey(BookUser, on_delete=models.CASCADE, verbose_name='пользователь')
     content = models.TextField()
     create_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата добавления')
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='пост')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='пост', related_name='cmnts')
 
     class Meta:
         verbose_name_plural = 'Комментарии'
         verbose_name = 'Комментарий'
-        ordering = ['author']
+        ordering = ['create_at']
 
 
 class Chat(models.Model):
