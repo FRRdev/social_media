@@ -144,7 +144,7 @@ $(function(){
                                         {% bootstrap_form form layout='horizontal' %}
                                         {% buttons submit='Добавить' %}{% endbuttons %}
                                     </form>
-                                    {% for comment in post.comment_set.all %}
+                                    {% for comment in post.cmnts.all %}
                                     <div class="p-2">
                                         <h4>{{ comment.author.first_name }} {{ comment.author.last_name }} <em>
                                             {{ comment.create_at|date:"d.m H:i" }}</em></h4>
