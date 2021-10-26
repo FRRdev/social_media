@@ -129,4 +129,3 @@ def copy_part(summ):
     return result
 
 
-print(ruble_func('12'))
